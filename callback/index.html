@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tesla login callback</title></head>
+<body style="font-family:system-ui,sans-serif;max-width:640px;margin:48px auto;padding:0 16px;color:#222">
+<h1>ログイン完了</h1>
+<p id="msg">認可コードを確認しています…</p>
+<textarea id="code" readonly style="width:100%;height:6em;display:none"></textarea>
+<button id="copy" style="display:none;margin-top:8px;padding:8px 16px">コードをコピー</button>
+<script>
+  // コードはこのページのURLにだけ含まれ、どこにも送信しません。
+  var p = new URLSearchParams(location.search);
+  var code = p.get('code'), err = p.get('error');
+  var msg = document.getElementById('msg'), box = document.getElementById('code'), btn = document.getElementById('copy');
+  if (code) {
+    msg.textContent = '下のコードをコピーして、トークン取得スクリプトに貼り付けてください（有効期限が短いので、すぐに使ってください）。';
+    box.value = code; box.style.display = 'block'; btn.style.display = 'inline-block';
+    btn.onclick = function(){ box.select(); navigator.clipboard.writeText(code); btn.textContent = 'コピーしました'; };
+  } else if (err) {
+    msg.textContent = 'エラー: ' + err + ' ' + (p.get('error_description') || '');
+  } else {
+    msg.textContent = 'このページはTeslaログイン後の戻り先です。';
+  }
+</script>
+</body></html>
